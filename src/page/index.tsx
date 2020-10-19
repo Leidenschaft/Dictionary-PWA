@@ -6,21 +6,12 @@ import { NavLink } from 'boot-cell/source/Navigator/Nav';
 import { history } from '../model';
 import WebCell_0 from '../image/WebCell-0.png';
 
-import { Hello } from './Hello';
-import { CellClock } from './Clock';
+import { SearchPage } from './Search';
 
 const menu = [
     {
-        title: 'Hello',
-        href: 'hello'
-    },
-    {
-        title: 'Clock',
-        href: 'clock'
-    },
-    {
         title: 'GitHub source',
-        href: 'https://github.com/EasyWebApp/scaffold'
+        href: 'https://github.com/Leidenschaft/Dictionary-PWA'
     }
 ];
 
@@ -31,7 +22,7 @@ export function PageFrame() {
                 narrow
                 brand={
                     <img
-                        alt="WebCell scaffold"
+                        alt="Dictionary PWA"
                         src={WebCell_0}
                         style={{ width: '2rem' }}
                     />
@@ -46,16 +37,7 @@ export function PageFrame() {
                 className="container"
                 style={{ minHeight: '60vh' }}
                 history={history}
-                routes={[
-                    {
-                        paths: ['clock'],
-                        component: CellClock
-                    },
-                    {
-                        paths: ['hello', ''],
-                        component: Hello
-                    }
-                ]}
+                routes={[{ paths: [''], component: SearchPage }]}
             />
             <footer className="text-center bg-light py-5">
                 Proudly developed with

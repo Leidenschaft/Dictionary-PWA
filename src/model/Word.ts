@@ -12,6 +12,8 @@ export interface Word {
     chinese: string;
     gender: keyof typeof Gender;
     address: string;
+    third_person_present: string;
+    perfekt: string;
 }
 
 const { localStorage } = self;

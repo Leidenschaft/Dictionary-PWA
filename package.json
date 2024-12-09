@@ -1,6 +1,6 @@
 {
     "name": "dictionary-pwa",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "App Project scaffold of WebCell v2",
     "keywords": [
         "web-component",
@@ -15,34 +15,35 @@
     "bugs": {
         "url": "https://github.com/Leidenschaft/Dictionary-PWA/issues"
     },
-    "main": "src/index.html",
     "dependencies": {
-        "boot-cell": "^1.2.1",
-        "bootstrap-icons": "^1.0.0",
+        "boot-cell": "^2.0.0-rc.0",
         "browser-unhandled-rejection": "^1.0.2",
-        "cell-router": "^2.0.1",
-        "classnames": "^2.2.6",
-        "koajax": "^0.6.2",
+        "cell-router": "^3.0.1",
+        "dom-renderer": "^2.6.1",
+        "koajax": "^3.1.1",
         "lodash.debounce": "^4.0.8",
-        "mobx": "^5.15.7",
-        "mobx-web-cell": "^0.3.2",
-        "web-cell": "^2.2.0",
-        "web-utility": "^1.8.2"
+        "mobx": "^6.13.5",
+        "mobx-restful": "^2.1.0-rc.1",
+        "web-cell": "^3.0.3",
+        "web-utility": "^4.4.2"
     },
     "devDependencies": {
-        "@types/lodash.debounce": "^4.0.6",
-        "@typescript-eslint/parser": "^4.4.1",
-        "autoprefixer": "^9.8.6",
-        "eslint": "^7.11.0",
-        "eslint-config-prettier": "^6.13.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "husky": "^4.3.0",
-        "lint-staged": "^10.4.2",
-        "parcel-bundler": "^1.12.4",
-        "postcss-modules": "^3.2.2",
-        "prettier": "^2.1.2",
-        "typescript": "^4.0.3",
-        "workbox-cli": "^4.3.1"
+        "@parcel/config-default": "~2.13.2",
+        "@parcel/packager-raw-url": "~2.13.2",
+        "@parcel/transformer-typescript-tsc": "~2.13.2",
+        "@parcel/transformer-webmanifest": "~2.13.2",
+        "@types/lodash.debounce": "^4.0.9",
+        "@types/node": "^20.17.9",
+        "autoprefixer": "^10.4.20",
+        "eslint": "^9.16.0",
+        "eslint-config-prettier": "^9.1.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.2.10",
+        "parcel": "~2.13.2",
+        "postcss-modules": "^6.0.1",
+        "prettier": "^3.4.2",
+        "typescript": "~5.7.2",
+        "workbox-cli": "^7.3.0"
     },
     "prettier": {
         "singleQuote": true,
@@ -52,10 +53,7 @@
     },
     "lint-staged": {
         "*.{html,md,css,less,json,yml}": "prettier --write",
-        "*.{js,ts,tsx}": [
-            "prettier --write",
-            "eslint --fix"
-        ]
+        "*.{js,ts,tsx}": "eslint --fix"
     },
     "postcss": {
         "modules": true,
@@ -66,16 +64,12 @@
         }
     },
     "scripts": {
+        "prepare": "husky",
         "test": "lint-staged",
-        "start": "workbox generateSW  &&  parcel src/index.html --open",
+        "clean": "rm -rf .parcel-cache/ dist/",
+        "start": "npm run clean  &&  parcel src/index.html",
         "pack-dist": "parcel build src/index.html --public-url .",
         "pack-sw": "rm -f dist/sw.js.map  &&  workbox generateSW",
-        "build": "rm -rf dist/  &&  npm run pack-dist  &&  npm run pack-sw"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm test",
-            "pre-push": "npm run build"
-        }
+        "build": "npm run clean  &&  npm run pack-dist  &&  npm run pack-sw"
     }
 }

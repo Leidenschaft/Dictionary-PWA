@@ -1,5 +1,6 @@
-import { observable } from 'mobx';
-import { request } from 'koajax';
+import { Filter, ListModel, Stream, persistList } from 'mobx-restful';
+import { HTTPClient } from 'koajax';
+import { Day } from 'web-utility';
 
 export enum Gender {
     der,
@@ -16,51 +17,40 @@ export interface Word {
     perfekt: string;
 }
 
-const { localStorage } = self;
+export interface WordFilter extends Filter<Word> {
+    keyword: string;
+}
 
-export class WordModel {
-    @observable
-    allItems: Word[] = localStorage.word_list
-        ? JSON.parse(localStorage.word_list)
-        : [];
+@persistList({
+    storeKey: 'Word',
+    expireIn: Day
+})
+export class WordModel extends Stream<Word, WordFilter>(ListModel) {
+    client = new HTTPClient({
+        baseURI:
+            'https://raw.githubusercontent.com/Leidenschaft/DeutschLernenWort/master/',
+        responseType: 'document'
+    });
 
-    @observable
-    list: Word[] = [];
+    async *openStream({ keyword }: WordFilter) {
+        const { body } = await this.client.get<Document>('wordlist.xml');
 
-    constructor() {
-        if (!this.allItems[0]) this.getAll();
-    }
+        const words = body.querySelectorAll('Word');
 
-    async getAll() {
-        const { response } = request<string>({
-            path:
-                'https://raw.githubusercontent.com/Leidenschaft/DeutschLernenWort/master/wordlist.xml'
-        });
-        const words = new DOMParser()
-            .parseFromString((await response).body, 'text/xml')
-            .querySelectorAll('Word');
+        for (const { attributes, textContent } of words) {
+            const word = {
+                ...Object.fromEntries(
+                    Array.from(attributes, ({ name, value }) => [name, value])
+                ),
+                text: textContent
+            } as Word;
 
-        this.allItems = Array.from(
-            words,
-            ({ attributes, textContent }) =>
-                ({
-                    ...Object.fromEntries(
-                        Array.from(attributes, ({ name, value }) => [
-                            name,
-                            value
-                        ])
-                    ),
-                    text: textContent
-                } as Word)
-        );
-        localStorage.word_list = JSON.stringify(this.allItems);
-        return this.allItems;
-    }
-
-    getList({ keyword }: { keyword: string }) {
-        return (this.list = this.allItems.filter(
-            ({ text, chinese }) =>
-                text.includes(keyword) || chinese.includes(keyword)
-        ));
+            if (
+                !keyword ||
+                word.text.includes(keyword) ||
+                word.chinese.includes(keyword)
+            )
+                yield word;
+        }
     }
 }

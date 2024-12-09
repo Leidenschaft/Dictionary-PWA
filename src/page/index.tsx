@@ -1,9 +1,6 @@
-import { createCell, Fragment } from 'web-cell';
-import { CellRouter } from 'cell-router/source';
-import { NavBar } from 'boot-cell/source/Navigator/NavBar';
-import { NavLink } from 'boot-cell/source/Navigator/Nav';
+import { createRouter } from 'cell-router';
+import { Nav, NavbarBrand, NavLink, OffcanvasNavbar } from 'boot-cell';
 
-import { history } from '../model';
 import WebCell_0 from '../image/WebCell-0.png';
 
 import { SearchPage } from './Search';
@@ -15,48 +12,53 @@ const menu = [
     }
 ];
 
-export function PageFrame() {
-    return (
-        <>
-            <NavBar
-                narrow
-                brand={
-                    <img
-                        alt="Dictionary PWA"
-                        src={WebCell_0}
-                        style={{ width: '2rem' }}
-                    />
-                }
-            >
-                {menu.map(({ title, ...props }) => (
-                    <NavLink {...props}>{title}</NavLink>
-                ))}
-            </NavBar>
+const { Route } = createRouter();
 
-            <CellRouter
-                className="container"
-                style={{ minHeight: '60vh' }}
-                history={history}
-                routes={[{ paths: [''], component: SearchPage }]}
-            />
-            <footer className="text-center bg-light py-5">
-                Proudly developed with
-                <a
-                    className="mx-1"
-                    target="_blank"
-                    href="https://web-cell.dev/"
-                >
-                    WebCell v2
-                </a>
-                &amp;
-                <a
-                    className="mx-1"
-                    target="_blank"
-                    href="https://web-cell.dev/BootCell/"
-                >
-                    BootCell v1
-                </a>
-            </footer>
-        </>
-    );
-}
+export const PageFrame = () => (
+    <>
+        <OffcanvasNavbar
+            variant="dark"
+            expand="md"
+            sticky="top"
+            fluid="lg"
+            brand={
+                <NavbarBrand>
+                    <img
+                        className="me-2"
+                        style={{ width: '2rem' }}
+                        alt="WebCell"
+                        src={WebCell_0}
+                    />
+                    Dictionary PWA
+                </NavbarBrand>
+            }
+        >
+            <Nav className="justify-content-end flex-fill gap-3">
+                {menu.map(({ title, href }) => (
+                    <NavLink href={href.startsWith('http') ? href : `#${href}`}>
+                        {title}
+                    </NavLink>
+                ))}
+            </Nav>
+        </OffcanvasNavbar>
+
+        <main className="container" style={{ minHeight: '60vh' }}>
+            <Route path="" component={SearchPage} />
+        </main>
+
+        <footer className="text-center bg-light py-5">
+            Proudly developed with
+            <a className="mx-1" target="_blank" href="https://web-cell.dev/">
+                WebCell v3
+            </a>
+            &amp;
+            <a
+                className="mx-1"
+                target="_blank"
+                href="https://web-cell.dev/BootCell/"
+            >
+                BootCell v2
+            </a>
+        </footer>
+    </>
+);

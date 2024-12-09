@@ -1,6 +1,6 @@
 import { auto } from 'browser-unhandled-rejection';
-import { serviceWorkerUpdate } from 'web-utility';
-import { documentReady, render, createCell } from 'web-cell';
+import { documentReady, serviceWorkerUpdate } from 'web-utility';
+import { DOMRenderer } from 'dom-renderer';
 
 import { PageFrame } from './page';
 
@@ -18,16 +18,21 @@ self.addEventListener('unhandledrejection', event => {
 
 const { serviceWorker } = window.navigator;
 
-serviceWorker
-    ?.register('sw.js')
-    .then(serviceWorkerUpdate)
-    .then(worker => {
-        if (window.confirm('New version of this Web App detected, update now?'))
-            worker.postMessage({ type: 'SKIP_WAITING' });
-    });
+if (process.env.NODE_ENV !== 'development')
+    serviceWorker
+        ?.register('sw.js')
+        .then(serviceWorkerUpdate)
+        .then(worker => {
+            if (
+                window.confirm(
+                    'New version of this Web App detected, update now?'
+                )
+            )
+                worker.postMessage({ type: 'SKIP_WAITING' });
+        });
 
 serviceWorker?.addEventListener('controllerchange', () =>
     window.location.reload()
 );
 
-documentReady.then(() => render(<PageFrame />));
+documentReady.then(() => new DOMRenderer().render(<PageFrame />));

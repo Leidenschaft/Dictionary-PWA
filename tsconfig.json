@@ -4,14 +4,11 @@
         "module": "es6",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "allowJs": true,
-        "sourceMap": true,
-        "jsx": "react",
-        "jsxFactory": "createCell",
-        "jsxFragmentFactory": "Fragment",
-        "lib": ["ES2020", "DOM"],
-        "rootDir": "src"
+        "downlevelIteration": true,
+        "useDefineForClassFields": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "dom-renderer",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"]
     },
     "include": ["src/**/*"]
 }

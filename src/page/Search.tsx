@@ -1,10 +1,6 @@
-import { component, mixin, createCell, Fragment } from 'web-cell';
-import { observer } from 'mobx-web-cell';
-import { Status } from 'boot-cell/source/utility/constant';
-import { Field } from 'boot-cell/source/Form/Field';
-import { Card } from 'boot-cell/source/Content/Card';
-import { Badge } from 'boot-cell/source/Reminder/Badge';
+import { Badge, Card, FloatingLabel, FormControl, Status } from 'boot-cell';
 import debounce from 'lodash.debounce';
+import { component, observer } from 'web-cell';
 
 import { Gender, Word, word } from '../model';
 
@@ -16,47 +12,51 @@ const GenderColor = {
 
 @observer
 @component({
-    tagName: 'search-page',
-    renderTarget: 'children'
+    tagName: 'search-page'
 })
-export class SearchPage extends mixin() {
-    handleSearch = debounce(
-        ({ data }: InputEvent) => word.getList({ keyword: data }),
-        500
-    );
+export class SearchPage extends HTMLElement {
+    handleSearch = debounce(({ data }: InputEvent) => {
+        word.clearList();
+        word.getList({ keyword: data });
+    }, 500);
 
     renderWord = ({ text, gender, chinese }: Word) => (
-        <div className="col-12 col-sm-6 col-md-4 col-lg-3 h-100">
+        <li className="col-12 col-sm-6 col-md-4 col-lg-3 h-100">
             <Card
                 className="shadow-sm"
                 title={text}
                 header={
-                    <Badge color={GenderColor[Gender[gender]]}>{gender}</Badge>
+                    <Badge bg={GenderColor[Gender[gender]]}>{gender}</Badge>
                 }
             >
                 {chinese}
             </Card>
-        </div>
+        </li>
     );
 
     render() {
-        const { list } = word;
+        const { allItems } = word;
 
         return (
             <>
                 <form
                     className="my-3"
                     onSubmit={(event: Event) => {
-                        event.preventDefault(), event.stopPropagation();
+                        event.preventDefault();
+                        event.stopPropagation();
                     }}
                 >
-                    <Field
-                        type="search"
-                        placeholder="Word Instant Search"
-                        onInput={this.handleSearch}
-                    />
+                    <FloatingLabel label="Word Instant Search">
+                        <FormControl
+                            type="search"
+                            placeholder="Word Instant Search"
+                            onInput={this.handleSearch}
+                        />
+                    </FloatingLabel>
                 </form>
-                <main className="row">{list.map(this.renderWord)}</main>
+                <ol className="list-unstyled row">
+                    {allItems.map(this.renderWord)}
+                </ol>
             </>
         );
     }

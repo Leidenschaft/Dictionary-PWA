@@ -1,13 +1,8 @@
 module.exports = {
     globDirectory: 'dist/',
-    globPatterns: [
-        '**/*.{html,css,js,json,webmanifest,ico,gif,jpg,jpeg,png,webp}'
-    ],
+    globPatterns: ['**/*.{html,css,js,json,ico,gif,jpg,jpeg,png,webp}'],
     swDest: 'dist/sw.js',
-    importWorkboxFrom: 'disabled',
-    importScripts: [
-        'https://cdn.jsdelivr.net/npm/workbox-sw@4.3.1/build/workbox-sw.min.js'
-    ],
+    importScripts: ['https://unpkg.com/workbox-sw@7.3.0/build/workbox-sw.js'],
     clientsClaim: true,
     cleanupOutdatedCaches: true
 };

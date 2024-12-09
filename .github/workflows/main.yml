@@ -3,25 +3,26 @@ on:
     push:
         branches:
             - master
-    pull_request:
-        branches:
-            - master
 jobs:
     Build-and-Deploy:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v2
-            - name: Use Node.js
-              uses: actions/setup-node@v2-beta
+            - uses: actions/checkout@v4
+
+            - uses: pnpm/action-setup@v4
               with:
-                  node-version: '12'
-            - name: Install & build
+                  version: 9
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: pnpm
+            - name: Install & Build
               run: |
-                  npm install
-                  npm run build
-            - name: Deploy
-              uses: peaceiris/actions-gh-pages@v3
+                  pnpm i --frozen-lockfile
+                  pnpm build
+
+            - name: Deploy to GitHub pages
+              uses: peaceiris/actions-gh-pages@v4
               with:
                   publish_dir: ./dist
                   personal_token: ${{ secrets.GITHUB_TOKEN }}

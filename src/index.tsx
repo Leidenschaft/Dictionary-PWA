@@ -1,10 +1,13 @@
 import { auto } from 'browser-unhandled-rejection';
-import { documentReady, serviceWorkerUpdate } from 'web-utility';
 import { DOMRenderer } from 'dom-renderer';
+import { configure } from 'mobx';
+import { documentReady, serviceWorkerUpdate } from 'web-utility';
 
 import { PageFrame } from './page';
 
 auto();
+
+configure({ enforceActions: 'never' });
 
 self.addEventListener('unhandledrejection', event => {
     const { message } = event.reason;

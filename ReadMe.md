@@ -2,46 +2,49 @@
 
 # Dictionary PWA
 
-App Project scaffold of **WebCell** v2
+App Project scaffold of [WebCell][1] v3
 
 https://leidenschaft.github.io/Dictionary-PWA/
 
-[![NPM Dependency](https://david-dm.org/Leidenschaft/Dictionary-PWA.svg)][1]
-[![CI & CD](https://github.com/Leidenschaft/Dictionary-PWA/workflows/CI%20&%20CD/badge.svg)][2]
+[![CI & CD](https://github.com/Leidenschaft/Dictionary-PWA/actions/workflows/main.yml/badge.svg)][2]
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)][3]
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][4]
 
 ## Cooperation links
 
--   Kanban: https://github.com/Leidenschaft/Dictionary-PWA/projects/1?fullscreen=true
+- Kanban: https://github.com/Leidenschaft/Dictionary-PWA/projects/1?fullscreen=true
 
 ## Technology stack
 
--   Language: [TypeScript v4][3]
--   Component engine: [WebCell v2][4]
--   Component suite: [BootStrap v4][5]
--   PWA framework: [Workbox v4][6]
--   Package bundler: [Parcel v1][7]
--   CI / CD: GitHub [Actions][8] + [Pages][9]
+- Language: [TypeScript v5][5]
+- Component engine: [WebCell v3][1]
+- Component suite: [BootCell v2][7]
+- PWA framework: [Workbox v7][8]
+- Package bundler: [Parcel v2][9]
+- CI / CD: GitHub [Actions][10] + [Pages][11]
 
 ## Development
 
 ```shell
-npm install
-
+npm i pnpm -g
+pnpm i
 npm start
 ```
 
 ## Deployment
 
 ```shell
-npm run build
+pnpm build
 ```
 
-[1]: https://david-dm.org/Leidenschaft/Dictionary-PWA
-[2]: https://github.com/Leidenschaft/Dictionary-PWA/actions
-[3]: https://typescriptlang.org
-[4]: https://web-cell.dev/
-[5]: https://getbootstrap.com
-[6]: https://developers.google.com/web/tools/workbox
-[7]: https://parceljs.org
-[8]: https://github.com/features/actions
-[9]: https://pages.github.com/
+[1]: https://web-cell.dev/
+[2]: https://github.com/Leidenschaft/Dictionary-PWA/actions/workflows/main.yml
+[3]: https://codespaces.new/Leidenschaft/Dictionary-PWA
+[4]: https://gitpod.io/?autostart=true#https://github.com/Leidenschaft/Dictionary-PWA
+[5]: https://typescriptlang.org/
+[7]: https://bootstrap.web-cell.dev/
+[8]: https://developers.google.com/web/tools/workbox
+[9]: https://parceljs.org/
+[10]: https://github.com/features/actions
+[11]: https://pages.github.com/

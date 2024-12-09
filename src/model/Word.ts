@@ -1,5 +1,5 @@
-import { Filter, ListModel, Stream, persistList } from 'mobx-restful';
 import { HTTPClient } from 'koajax';
+import { Filter, ListModel, PersistNode, Stream } from 'mobx-restful';
 import { Day } from 'web-utility';
 
 export enum Gender {
@@ -21,35 +21,44 @@ export interface WordFilter extends Filter<Word> {
     keyword: string;
 }
 
-@persistList({
-    storeKey: 'Word',
-    expireIn: Day
-})
 export class WordModel extends Stream<Word, WordFilter>(ListModel) {
+    allWords = new PersistNode<Word[], Word[]>({
+        key: 'allWords',
+        expireIn: Day
+    });
+
     client = new HTTPClient({
         baseURI:
             'https://raw.githubusercontent.com/Leidenschaft/DeutschLernenWort/master/',
         responseType: 'document'
     });
 
-    async *openStream({ keyword }: WordFilter) {
+    protected async getAllWords() {
+        let allWords = await this.allWords.load('Word');
+
+        if (allWords) return allWords;
+
         const { body } = await this.client.get<Document>('wordlist.xml');
 
-        const words = body.querySelectorAll('Word');
+        allWords = [...body.querySelectorAll('Word')].map(
+            ({ attributes, textContent }) =>
+                ({
+                    ...Object.fromEntries(
+                        [...attributes].map(({ name, value }) => [name, value])
+                    ),
+                    text: textContent
+                }) as Word
+        );
+        await this.allWords.save('Word', allWords);
 
-        for (const { attributes, textContent } of words) {
-            const word = {
-                ...Object.fromEntries(
-                    Array.from(attributes, ({ name, value }) => [name, value])
-                ),
-                text: textContent
-            } as Word;
+        return allWords;
+    }
 
-            if (
-                !keyword ||
-                word.text.includes(keyword) ||
-                word.chinese.includes(keyword)
-            )
+    async *openStream({ keyword }: WordFilter) {
+        for (const word of await this.getAllWords()) {
+            const { text, chinese } = word;
+
+            if (!keyword || text.includes(keyword) || chinese.includes(keyword))
                 yield word;
         }
     }

@@ -28,21 +28,28 @@
         "web-utility": "^4.4.2"
     },
     "devDependencies": {
+        "@eslint/compat": "^1.2.4",
+        "@eslint/js": "^9.16.0",
         "@parcel/config-default": "~2.13.2",
         "@parcel/packager-raw-url": "~2.13.2",
         "@parcel/transformer-typescript-tsc": "~2.13.2",
         "@parcel/transformer-webmanifest": "~2.13.2",
+        "@types/eslint-config-prettier": "^6.11.3",
         "@types/lodash.debounce": "^4.0.9",
         "@types/node": "^20.17.9",
         "autoprefixer": "^10.4.20",
         "eslint": "^9.16.0",
         "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-react": "^7.37.2",
+        "eslint-plugin-simple-import-sort": "^12.1.1",
+        "globals": "^15.13.0",
         "husky": "^9.1.7",
         "lint-staged": "^15.2.10",
         "parcel": "~2.13.2",
         "postcss-modules": "^6.0.1",
         "prettier": "^3.4.2",
         "typescript": "~5.7.2",
+        "typescript-eslint": "^8.18.0",
         "workbox-cli": "^7.3.0"
     },
     "prettier": {

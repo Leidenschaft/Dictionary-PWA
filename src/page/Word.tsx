@@ -1,5 +1,6 @@
-import { Badge, ListGroup, ListGroupItem } from 'boot-cell';
+import { Badge, Button, ListGroup, ListGroupItem } from 'boot-cell';
 import { observable } from 'mobx';
+import { SpeechSynthesisModel, SpeechSynthesisState } from 'mobx-i18n';
 import { attribute, component, observer } from 'web-cell';
 import { CustomElement, isEmpty } from 'web-utility';
 import { stringify } from 'yaml';
@@ -20,6 +21,20 @@ export class WordPage extends HTMLElement implements CustomElement {
     disconnectedCallback() {
         wordStore.clearCurrent();
     }
+
+    storeTTS = new SpeechSynthesisModel();
+
+    toggleSpeaking = () => {
+        const { storeTTS } = this;
+
+        if (storeTTS.state !== SpeechSynthesisState.Clear)
+            return storeTTS.toggle();
+
+        const text = SpeechSynthesisModel.getReadableText(
+            this.querySelector('h1')
+        );
+        storeTTS.speak(text);
+    };
 
     renderRow(key: string, value: unknown) {
         return (
@@ -43,21 +58,30 @@ export class WordPage extends HTMLElement implements CustomElement {
     render() {
         const { text, chinese, gender, address, Stichwort, ...data } =
             wordStore.currentOne as Word;
+        const speaking = this.storeTTS.state === SpeechSynthesisState.Speaking;
 
         return (
             <article className="container px-0 py-3">
-                <header className="d-flex flex-wrap justify-content-between align-items-center">
-                    <h1 className="d-flex align-items-center">
-                        {text}
-                        <Badge
-                            className="fs-6 ms-2"
-                            bg={gender === 'die' ? 'danger' : 'primary'}
-                        >
-                            {gender}
-                        </Badge>
-                    </h1>
+                <header className="d-flex flex-wrap align-items-center gap-2">
+                    <h1>{text}</h1>
+                    <Badge
+                        className="fs-6"
+                        bg={gender === 'die' ? 'danger' : 'primary'}
+                    >
+                        {gender}
+                    </Badge>
+                    <Button
+                        variant={speaking ? 'danger' : 'primary'}
+                        size="sm"
+                        onClick={this.toggleSpeaking}
+                    >
+                        {speaking ? '🔇' : '📢'}
+                    </Button>
+
                     {Stichwort && (
-                        <img src={Stichwort.Bild} alt={Stichwort.text} />
+                        <span className="flex-fill text-end">
+                            <img src={Stichwort.Bild} alt={Stichwort.text} />
+                        </span>
                     )}
                 </header>
 

@@ -23,8 +23,10 @@ const GenderColor = {
     tagName: 'search-page'
 })
 export class SearchPage extends HTMLElement {
-    handleSearch = debounce(({ data }: InputEvent) => {
+    handleSearch = debounce(({ data, target }: InputEvent) => {
         wordStore.clearList();
+
+        data ||= (target as HTMLInputElement).value;
 
         if (data) wordStore.getList({ keyword: data });
     }, 500);
@@ -66,6 +68,7 @@ export class SearchPage extends HTMLElement {
                             name="keyword"
                             placeholder="Word Instant Search"
                             onInput={this.handleSearch}
+                            onChange={this.handleSearch}
                         />
                     </FloatingLabel>
                 </form>

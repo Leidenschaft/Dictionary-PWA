@@ -24,6 +24,7 @@
         "koajax": "^3.1.1",
         "lodash.debounce": "^4.0.8",
         "mobx": "^6.13.5",
+        "mobx-i18n": "^0.6.0",
         "mobx-restful": "^2.1.0-rc.1",
         "web-cell": "^3.0.3",
         "web-utility": "^4.4.2",

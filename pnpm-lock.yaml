@@ -32,6 +32,9 @@ importers:
       mobx:
         specifier: ^6.13.5
         version: 6.13.5
+      mobx-i18n:
+        specifier: ^0.6.0
+        version: 0.6.0(mobx@6.13.5)(typescript@5.7.2)
       mobx-restful:
         specifier: ^2.1.0-rc.1
         version: 2.1.0-rc.1(core-js@3.39.0)(jsdom@25.0.1)(mobx@6.13.5)(typescript@5.7.2)
@@ -2830,6 +2833,11 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  mobx-i18n@0.6.0:
+    resolution: {integrity: sha512-dooxek8Iq+RKbM0qGwCsAhQI/j8MtdwiC9gzFNzx+cCnn0bBDDgwK9Inie8UFw6XmOiy+T2kPzeaFvr72KLKQw==}
+    peerDependencies:
+      mobx: '>=6.11'
 
   mobx-restful@2.1.0-rc.1:
     resolution: {integrity: sha512-VpovLpDMhVVjknTd033lTPQug5jpYps48tbxIe5ISR86/sWC+WrczeJj2HBdi79ooRC0V2AM3SzWyPBKj5ZpVw==}
@@ -7107,6 +7115,15 @@ snapshots:
       kind-of: 6.0.3
 
   minimist@1.2.8: {}
+
+  mobx-i18n@0.6.0(mobx@6.13.5)(typescript@5.7.2):
+    dependencies:
+      '@swc/helpers': 0.5.15
+      mobx: 6.13.5
+      regenerator-runtime: 0.14.1
+      web-utility: 4.4.2(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
 
   mobx-restful@2.1.0-rc.1(core-js@3.39.0)(jsdom@25.0.1)(mobx@6.13.5)(typescript@5.7.2):
     dependencies:

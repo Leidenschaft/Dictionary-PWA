@@ -1,4 +1,4 @@
 import { WordModel } from './Word';
 
 export * from './Word';
-export const word = new WordModel();
+export const wordStore = new WordModel();

@@ -1,9 +1,9 @@
-import { createRouter } from 'cell-router';
 import { Nav, NavbarBrand, NavLink, OffcanvasNavbar } from 'boot-cell';
+import { createRouter } from 'cell-router';
 
 import WebCell_0 from '../image/WebCell-0.png';
-
 import { SearchPage } from './Search';
+import { WordPage } from './Word';
 
 const menu = [
     {
@@ -42,20 +42,21 @@ export const PageFrame = () => (
             </Nav>
         </OffcanvasNavbar>
 
-        <main className="container" style={{ minHeight: '60vh' }}>
+        <main className="container p-0" style={{ minHeight: '60vh' }}>
             <Route path="" component={SearchPage} />
+            <Route path="word/:word" component={WordPage} />
         </main>
 
         <footer className="text-center bg-light py-5">
             Proudly developed with
-            <a className="mx-1" target="_blank" href="https://web-cell.dev/">
+            <a className="mx-1" target="_blank" href="https://web-cell.dev/" rel="noreferrer">
                 WebCell v3
             </a>
             &amp;
             <a
                 className="mx-1"
                 target="_blank"
-                href="https://web-cell.dev/BootCell/"
+                href="https://web-cell.dev/BootCell/" rel="noreferrer"
             >
                 BootCell v2
             </a>

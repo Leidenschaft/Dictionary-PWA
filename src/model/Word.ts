@@ -1,6 +1,16 @@
 import { HTTPClient } from 'koajax';
-import { Filter, ListModel, PersistNode, Stream } from 'mobx-restful';
+import { observable } from 'mobx';
+import {
+    Filter,
+    ListModel,
+    persist,
+    restore,
+    Stream,
+    toggle
+} from 'mobx-restful';
 import { Day } from 'web-utility';
+
+import { XML2JSON } from '../utility';
 
 export enum Gender {
     der,
@@ -13,8 +23,13 @@ export interface Word {
     chinese: string;
     gender: keyof typeof Gender;
     address: string;
-    third_person_present: string;
-    perfekt: string;
+    third_person_present?: string;
+    perfekt?: string;
+    Stichwort?: {
+        text: string;
+        Audio: boolean;
+        Bild: string;
+    };
 }
 
 export interface WordFilter extends Filter<Word> {
@@ -22,44 +37,54 @@ export interface WordFilter extends Filter<Word> {
 }
 
 export class WordModel extends Stream<Word, WordFilter>(ListModel) {
-    allWords = new PersistNode<Word[], Word[]>({
-        key: 'allWords',
-        expireIn: Day
-    });
+    @persist({ expireIn: Day })
+    @observable
+    accessor allWords: Word[] = [];
+
+    restored = restore(this, 'Word').then(() => this.getAllWords());
 
     client = new HTTPClient({
         baseURI:
             'https://raw.githubusercontent.com/Leidenschaft/DeutschLernenWort/master/',
-        responseType: 'document'
+        responseType: 'text'
     });
 
     protected async getAllWords() {
-        let allWords = await this.allWords.load('Word');
+        const { allWords } = this;
 
-        if (allWords) return allWords;
+        if (allWords[0]) return allWords;
 
-        const { body } = await this.client.get<Document>('wordlist.xml');
+        const { body } = await this.client.get<string>('wordlist.xml');
 
-        allWords = [...body.querySelectorAll('Word')].map(
-            ({ attributes, textContent }) =>
-                ({
-                    ...Object.fromEntries(
-                        [...attributes].map(({ name, value }) => [name, value])
-                    ),
-                    text: textContent
-                }) as Word
-        );
-        await this.allWords.save('Word', allWords);
+        const { Wordlist } = XML2JSON<{ Wordlist: { Word: Word[] } }>(body);
 
-        return allWords;
+        return (this.allWords = Wordlist.Word);
     }
 
     async *openStream({ keyword }: WordFilter) {
-        for (const word of await this.getAllWords()) {
+        await this.restored;
+
+        for (const word of this.allWords) {
             const { text, chinese } = word;
 
             if (!keyword || text.includes(keyword) || chinese.includes(keyword))
                 yield word;
         }
+    }
+
+    @toggle('downloading')
+    async getOne(word: string) {
+        await this.restored;
+
+        const meta = this.allWords.find(({ text }) => text === word);
+
+        const { body } = await this.client.get<string>(meta?.address);
+
+        const { Entry } = XML2JSON<{ Entry: Word }>(body);
+
+        if (Entry.Stichwort)
+            Entry.Stichwort.Bild = this.client.baseURI + Entry.Stichwort.Bild;
+
+        return (this.currentOne = { ...meta, ...Entry });
     }
 }

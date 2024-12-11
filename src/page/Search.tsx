@@ -10,7 +10,7 @@ import {
 import debounce from 'lodash.debounce';
 import { component, observer } from 'web-cell';
 
-import { Gender, Word, word } from '../model';
+import { Gender, Word, wordStore } from '../model';
 
 const GenderColor = {
     [Gender.der]: 'primary',
@@ -23,10 +23,12 @@ const GenderColor = {
     tagName: 'search-page'
 })
 export class SearchPage extends HTMLElement {
-    handleSearch = debounce(({ data }: InputEvent) => {
-        word.clearList();
+    handleSearch = debounce(({ data, target }: InputEvent) => {
+        wordStore.clearList();
 
-        if (data) word.getList({ keyword: data });
+        data ||= (target as HTMLInputElement).value;
+
+        if (data) wordStore.getList({ keyword: data });
     }, 500);
 
     renderWord = ({ text, gender, chinese }: Word) => (
@@ -37,14 +39,19 @@ export class SearchPage extends HTMLElement {
                 </CardHeader>
                 <CardBody>
                     <CardTitle>{text}</CardTitle>
-                    {chinese}
+                    <a
+                        className="text-decoration-none stretched-link"
+                        href={`#word/${text}`}
+                    >
+                        {chinese}
+                    </a>
                 </CardBody>
             </Card>
         </li>
     );
 
     render() {
-        const { allItems } = word;
+        const { allItems } = wordStore;
 
         return (
             <>
@@ -61,6 +68,7 @@ export class SearchPage extends HTMLElement {
                             name="keyword"
                             placeholder="Word Instant Search"
                             onInput={this.handleSearch}
+                            onChange={this.handleSearch}
                         />
                     </FloatingLabel>
                 </form>

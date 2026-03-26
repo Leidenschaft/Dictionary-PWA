@@ -28,7 +28,7 @@
         "mobx-restful": "^2.1.0-rc.1",
         "web-cell": "^3.0.3",
         "web-utility": "^4.4.2",
-        "yaml": "^2.6.1"
+        "yaml": "^2.8.3"
     },
     "devDependencies": {
         "@eslint/compat": "^1.2.4",
